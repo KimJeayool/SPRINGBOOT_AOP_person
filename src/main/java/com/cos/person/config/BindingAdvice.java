@@ -6,11 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +27,14 @@ import java.util.Map;
 @Aspect
 @Component
 public class BindingAdvice {
+
+    @Before("execution(* com.cos.person.web..*Controller.*(..))")
+    public void logCheck() {
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        log.info("logCheck() 실행 URL={}", request.getRequestURI());
+    }
+
 
     @Around("execution(* com.cos.person.web..*Controller.*(..))")
     public Object validateCheck(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -45,6 +57,8 @@ public class BindingAdvice {
                     for (FieldError error : bindingResult.getFieldErrors()) {
                         // 해당 필드와 메세지 담기
                         errorMap.put(error.getField(), error.getDefaultMessage());
+                        log.warn(type + "." + method + "() => 필드 : {}", error.getField());
+                        log.warn(type + "." + method + "() => 메세지 : {}", error.getDefaultMessage());
                     }
                     // 유효성 검사 이상 있음
                     return new CommonDTO<>(HttpStatus.BAD_REQUEST.value(), errorMap);
