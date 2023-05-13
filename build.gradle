@@ -20,6 +20,10 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Validation 추가
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// AOP 추가
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
