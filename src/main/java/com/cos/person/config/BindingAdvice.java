@@ -2,6 +2,7 @@ package com.cos.person.config;
 
 
 import com.cos.person.domain.CommonDTO;
+import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -59,6 +60,9 @@ public class BindingAdvice {
                         errorMap.put(error.getField(), error.getDefaultMessage());
                         log.warn(type + "." + method + "() => 필드 : {}", error.getField());
                         log.warn(type + "." + method + "() => 메세지 : {}", error.getDefaultMessage());
+                        // Sentry Log
+                        Sentry.captureMessage(type + "." + method + "() => 필드 : " + error.getField());
+                        Sentry.captureMessage(type + "." + method + "() => 메세지 : " + error.getDefaultMessage());
                     }
                     // 유효성 검사 이상 있음
                     return new CommonDTO<>(HttpStatus.BAD_REQUEST.value(), errorMap);
