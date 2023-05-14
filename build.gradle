@@ -24,6 +24,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// AOP 추가
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	// Sentry Log
+	implementation("io.sentry:sentry-spring-boot-starter:4.3.0")
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
